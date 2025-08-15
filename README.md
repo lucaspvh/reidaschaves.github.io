@@ -1,0 +1,1076 @@
+[Index.html](https://github.com/user-attachments/files/21782895/Index.html)
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rei das Chaves - Sistema de Preços</title>
+    <style>
+        :root {
+            --cor-primaria: #4d9eff;
+            --cor-secundaria: #0066cc;
+            --cor-fundo: #333;
+            --cor-card: #444;
+            --cor-texto: #fff;
+            --cor-borda: #555;
+            --cor-destaque: #4CAF50;
+            --cor-perigo: #ff3333;
+            --cor-aviso: #ff9800;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: var(--cor-card);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        h1 {
+            color: var(--cor-primaria);
+            text-align: center;
+            margin: 20px 0 30px;
+            font-size: 28px;
+        }
+        
+        h2 {
+            color: var(--cor-primaria);
+            margin-top: 25px;
+            border-bottom: 1px solid var(--cor-borda);
+            padding-bottom: 8px;
+            font-size: 22px;
+        }
+        
+        h3 {
+            color: var(--cor-primaria);
+            margin: 15px 0 10px;
+            font-size: 18px;
+        }
+        
+        .page {
+            display: none;
+            text-align: center;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .btn {
+            display: block;
+            width: 80%;
+            padding: 12px;
+            margin: 10px auto;
+            background: var(--cor-secundaria);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background 0.2s;
+        }
+        
+        .btn:hover {
+            background: #0055aa;
+            transform: translateY(-1px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-voltar {
+            width: 50%;
+            background: #666;
+            margin: 20px auto 0;
+        }
+        
+        .btn-ano {
+            display: inline-block;
+            width: auto;
+            min-width: 60px;
+            padding: 8px 12px;
+            margin: 5px;
+            background: #555;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-ano:hover {
+            background: var(--cor-primaria);
+        }
+        
+        .btn-remover {
+            background: var(--cor-perigo);
+            margin-left: 5px;
+            padding: 4px 8px;
+            font-size: 12px;
+            border-radius: 3px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .btn-editar {
+            background: var(--cor-aviso);
+            width: 100px;
+            margin: 10px auto;
+        }
+        
+        .btn-salvar {
+            background: var(--cor-destaque);
+            margin: 20px auto;
+            display: block;
+            width: 150px;
+        }
+        
+        .ficha-tecnica {
+            margin: 20px auto;
+            padding: 15px;
+            background: var(--cor-borda);
+            border-radius: 8px;
+            max-width: 90%;
+            text-align: left;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--cor-card);
+        }
+        
+        th {
+            color: var(--cor-primaria);
+            font-weight: normal;
+        }
+        
+        td:first-child {
+            width: 70%;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .item-container {
+            display: inline-flex;
+            align-items: center;
+            margin: 5px;
+            padding: 8px;
+            background: var(--cor-card);
+            border-radius: 5px;
+        }
+        
+        .add-item-container {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--cor-card);
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .novo-item-container {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--cor-card);
+            border-radius: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .observacao {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background: var(--cor-card);
+            border: 1px solid var(--cor-borda);
+            color: var(--cor-texto);
+            border-radius: 5px;
+            min-height: 100px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .observacao-view {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--cor-borda);
+            border-radius: 5px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        
+        .gerenciar-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .gerenciar-container .btn {
+            width: auto;
+            padding: 8px 12px;
+            margin: 0;
+            font-size: 13px;
+        }
+        
+        .lista-container {
+            margin-top: 50px;
+        }
+        
+        .atalhos-info {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 100;
+        }
+        
+        input[type="text"], 
+        input[type="number"], 
+        textarea,
+        select {
+            background: var(--cor-card);
+            border: 1px solid var(--cor-borda);
+            color: var(--cor-texto);
+            padding: 10px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        
+        input[type="text"]:focus, 
+        input[type="number"]:focus, 
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--cor-primaria);
+        }
+        
+        .backup-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--cor-card);
+            border-radius: 8px;
+        }
+        
+        .backup-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .backup-actions .btn {
+            width: auto;
+            margin: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--cor-primaria);
+        }
+        
+        .alert {
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .alert-success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid var(--cor-destaque);
+            color: #a5d6a7;
+        }
+        
+        .alert-danger {
+            background: rgba(255, 51, 51, 0.2);
+            border: 1px solid var(--cor-perigo);
+            color: #ffabab;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .gerenciar-container {
+                position: static;
+                justify-content: center;
+                margin-bottom: 15px;
+            }
+            
+            .btn {
+                width: 90%;
+            }
+            
+            .novo-item-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rei das Chaves - Tabelas de Preço</h1>
+        
+        <!-- Página 1: Montadoras -->
+        <div id="page-montadoras" class="page active">
+            <div class="gerenciar-container">
+                <button class="btn" onclick="mostrarGerenciarMontadoras()">Gerenciar</button>
+                <button class="btn" onclick="mostrarBackupRestore()">Backup</button>
+            </div>
+            <h2>Montadoras</h2>
+            <div id="lista-montadoras" class="lista-container"></div>
+        </div>
+        
+        <!-- Página 1.5: Gerenciar Montadoras -->
+        <div id="page-gerenciar-montadoras" class="page">
+            <h2>Gerenciar Montadoras</h2>
+            <div id="lista-montadoras-gerenciar"></div>
+            <div class="add-item-container">
+                <input type="text" id="nova-montadora" placeholder="Nome da Montadora" class="form-input">
+                <button class="btn btn-add" onclick="adicionarMontadora()">Adicionar Montadora</button>
+            </div>
+            <button class="btn btn-voltar" onclick="voltarParaMontadoras()">Voltar</button>
+        </div>
+        
+        <!-- Página 1.7: Backup e Restauração -->
+        <div id="page-backup" class="page">
+            <h2>Backup e Restauração</h2>
+            <div class="backup-container">
+                <h3>Exportar Dados</h3>
+                <p>Exporte seus dados para um arquivo que pode ser salvo em um pen-drive.</p>
+                <button class="btn btn-salvar" onclick="exportarDados()">Exportar para Arquivo</button>
+                
+                <h3>Importar Dados</h3>
+                <p>Importe dados de um arquivo previamente exportado.</p>
+                <div class="form-group">
+                    <input type="file" id="import-file" accept=".json" style="display: none;">
+                    <button class="btn" onclick="document.getElementById('import-file').click()">Selecionar Arquivo</button>
+                    <button class="btn btn-salvar" onclick="importarDados()" style="margin-top: 10px;">Importar Dados</button>
+                </div>
+                
+                <h3>Limpar Dados</h3>
+                <p>Remove todos os dados do sistema. Esta ação não pode ser desfeita!</p>
+                <button class="btn btn-remover" onclick="limparDados()" style="width: 200px;">Limpar Todos os Dados</button>
+            </div>
+            <button class="btn btn-voltar" onclick="voltarParaMontadoras()">Voltar</button>
+        </div>
+        
+        <!-- Página 2: Modelos -->
+        <div id="page-modelos" class="page">
+            <div class="gerenciar-container">
+                <button class="btn" onclick="mostrarGerenciarModelos()">Gerenciar</button>
+                <button class="btn" onclick="voltarParaMontadoras()">Voltar</button>
+            </div>
+            <h2>Modelos da <span id="nome-montadora"></span></h2>
+            <div id="lista-modelos" class="lista-container"></div>
+        </div>
+        
+        <!-- Página 2.5: Gerenciar Modelos -->
+        <div id="page-gerenciar-modelos" class="page">
+            <h2>Gerenciar Modelos da <span id="nome-montadora-gerenciar"></span></h2>
+            <div id="lista-modelos-gerenciar"></div>
+            <div class="add-item-container">
+                <input type="text" id="novo-modelo" placeholder="Nome do Modelo" class="form-input">
+                <button class="btn btn-add" onclick="adicionarModelo()">Adicionar Modelo</button>
+            </div>
+            <button class="btn btn-voltar" onclick="voltarParaModelos()">Voltar para Modelos</button>
+        </div>
+        
+        <!-- Página 3: Anos -->
+        <div id="page-anos" class="page">
+            <div class="gerenciar-container">
+                <button class="btn" onclick="mostrarGerenciarAnos()">Gerenciar</button>
+                <button class="btn" onclick="voltarParaModelos()">Voltar</button>
+            </div>
+            <h2>Anos do <span id="nome-modelo"></span></h2>
+            <div id="lista-anos" class="lista-container"></div>
+        </div>
+        
+        <!-- Página 3.5: Gerenciar Anos -->
+        <div id="page-gerenciar-anos" class="page">
+            <h2>Gerenciar Anos do <span id="nome-modelo-gerenciar"></span></h2>
+            <div id="lista-anos-gerenciar"></div>
+            <div class="add-item-container">
+                <input type="number" id="novo-ano" placeholder="Ano" min="2000" max="2099" class="form-input">
+                <button class="btn btn-add" onclick="adicionarAno()">Adicionar Ano</button>
+            </div>
+            <button class="btn btn-voltar" onclick="voltarParaAnos()">Voltar para Anos</button>
+        </div>
+        
+        <!-- Página 4: Preço e Ficha -->
+        <div id="page-preco" class="page">
+            <h2><span id="nome-modelo-ano"></span></h2>
+            <div class="ficha-tecnica">
+                <div id="view-mode">
+                    <table id="precos-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Preço</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <h3>Observações</h3>
+                    <div id="observacao-view" class="observacao-view"></div>
+                    <button id="btn-editar" class="btn btn-editar" onclick="entrarModoEdicao()">Editar</button>
+                </div>
+                
+                <div id="edit-mode" class="hidden">
+                    <table id="edit-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Preço</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="novo-item-container">
+                        <input type="text" id="novo-item-descricao" placeholder="Novo item" class="form-input">
+                        <input type="text" id="novo-item-preco" placeholder="0,00" class="form-input">
+                        <button class="btn btn-add" onclick="adicionarNovoItem()">Adicionar Item</button>
+                    </div>
+                    <h3>Observações Gerais</h3>
+                    <textarea id="observacao-edit" class="observacao" placeholder="Adicione observações aqui..."></textarea>
+                    <button class="btn btn-salvar" onclick="salvarPrecos()">Salvar (Enter)</button>
+                    <button class="btn btn-voltar" onclick="sairModoEdicao()" style="width: 100px;">Cancelar</button>
+                </div>
+            </div>
+            <button class="btn btn-voltar" onclick="voltarParaAnos()">Voltar</button>
+        </div>
+    </div>
+
+    <div class="atalhos-info">
+        Atalhos: Enter (Salvar) | Esc (Voltar)
+    </div>
+
+    <script>
+        // Banco de dados inicial
+        let database = JSON.parse(localStorage.getItem('igoldDatabase')) || {
+            "Chevrolet": {
+                "Onix": { 
+                    "2023": { 
+                        observacao: "Exemplo de observações para este modelo/ano",
+                        configuracoes: {
+                            "Abertura": { visivel: true, preco: "R$ 150,00", obs: "Inclui chave reserva" },
+                            "Chave sem modelo Yale": { visivel: true, preco: "R$ 80,00", obs: "Sem chip" },
+                            "Chave sem modelo Yale com controle": { visivel: true, preco: "R$ 120,00", obs: "Com chip" }
+                        }
+                    } 
+                }
+            }
+        };
+
+        let montadoraSelecionada = "";
+        let modeloSelecionado = "";
+        let anoSelecionado = "";
+        let alertTimeout = null;
+
+        // Funções básicas
+        function salvarDatabase() {
+            localStorage.setItem('igoldDatabase', JSON.stringify(database));
+            mostrarAlerta('Dados salvos com sucesso!', 'success');
+        }
+
+        function criarSafeId(texto) {
+            return texto.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+        }
+
+        function mostrarAlerta(mensagem, tipo = 'success') {
+            // Remove alerta anterior se existir
+            const alertaAnterior = document.querySelector('.alert');
+            if (alertaAnterior) alertaAnterior.remove();
+            
+            // Limpa timeout anterior se existir
+            if (alertTimeout) clearTimeout(alertTimeout);
+            
+            // Cria novo alerta
+            const alerta = document.createElement('div');
+            alerta.className = `alert alert-${tipo}`;
+            alerta.textContent = mensagem;
+            
+            // Adiciona ao container
+            const container = document.querySelector('.container');
+            container.insertBefore(alerta, container.firstChild);
+            
+            // Remove após 5 segundos
+            alertTimeout = setTimeout(() => {
+                alerta.remove();
+            }, 5000);
+        }
+
+        // Funções para backup e restauração
+        function mostrarBackupRestore() {
+            trocarPagina("page-backup");
+        }
+
+        function exportarDados() {
+            try {
+                const dataStr = JSON.stringify(database, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `igold-backup-${new Date().toISOString().split('T')[0]}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+                
+                mostrarAlerta('Backup exportado com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao exportar dados:', error);
+                mostrarAlerta('Erro ao exportar dados!', 'danger');
+            }
+        }
+
+        function importarDados() {
+            const fileInput = document.getElementById('import-file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                mostrarAlerta('Nenhum arquivo selecionado!', 'danger');
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    if (!importedData || typeof importedData !== 'object') {
+                        throw new Error('Formato de arquivo inválido');
+                    }
+                    
+                    if (confirm('Deseja substituir todos os dados atuais pelos dados importados?')) {
+                        database = importedData;
+                        salvarDatabase();
+                        mostrarAlerta('Dados importados com sucesso!', 'success');
+                        voltarParaMontadoras();
+                    }
+                } catch (error) {
+                    console.error('Erro ao importar dados:', error);
+                    mostrarAlerta('Erro ao importar dados! Arquivo inválido.', 'danger');
+                }
+            };
+            
+            reader.onerror = function() {
+                mostrarAlerta('Erro ao ler o arquivo!', 'danger');
+            };
+            
+            reader.readAsText(file);
+        }
+
+        function limparDados() {
+            if (confirm('ATENÇÃO: Isso irá apagar TODOS os dados do sistema. Deseja continuar?')) {
+                localStorage.removeItem('igoldDatabase');
+                database = {
+                    "Chevrolet": {
+                        "Onix": { 
+                            "2023": { 
+                                observacao: "",
+                                configuracoes: {
+                                    "Abertura": { visivel: true, preco: "R$ 150,00", obs: "" },
+                                    "Chave sem modelo Yale": { visivel: true, preco: "R$ 80,00", obs: "" }
+                                }
+                            } 
+                        }
+                    }
+                };
+                salvarDatabase();
+                mostrarAlerta('Todos os dados foram apagados!', 'success');
+                voltarParaMontadoras();
+            }
+        }
+
+        // Funções para montadoras
+        function mostrarGerenciarMontadoras() {
+            gerarListaMontadorasGerenciar();
+            trocarPagina("page-gerenciar-montadoras");
+        }
+
+        function gerarListaMontadoras() {
+            const lista = document.getElementById("lista-montadoras");
+            lista.innerHTML = "";
+            
+            Object.keys(database).sort().forEach(montadora => {
+                const btn = document.createElement("button");
+                btn.className = "btn";
+                btn.textContent = montadora;
+                btn.onclick = () => mostrarModelos(montadora);
+                lista.appendChild(btn);
+            });
+        }
+
+        function gerarListaMontadorasGerenciar() {
+            const lista = document.getElementById("lista-montadoras-gerenciar");
+            lista.innerHTML = "";
+            
+            Object.keys(database).sort().forEach(montadora => {
+                const container = document.createElement("div");
+                container.className = "item-container";
+                container.innerHTML = `
+                    <span>${montadora}</span>
+                    <button class="btn-remover" onclick="removerMontadora('${montadora.replace(/'/g, "\\'")}')">Remover</button>
+                `;
+                lista.appendChild(container);
+            });
+        }
+
+        function adicionarMontadora() {
+            const input = document.getElementById("nova-montadora");
+            const nome = input.value.trim();
+            
+            if (!nome) {
+                mostrarAlerta("Por favor, insira um nome para a montadora", 'danger');
+                return;
+            }
+            
+            if (database[nome]) {
+                mostrarAlerta("Esta montadora já existe", 'danger');
+                return;
+            }
+            
+            database[nome] = {};
+            input.value = "";
+            gerarListaMontadorasGerenciar();
+            gerarListaMontadoras();
+            salvarDatabase();
+            mostrarAlerta(`Montadora "${nome}" adicionada com sucesso!`, 'success');
+        }
+
+        function removerMontadora(montadora) {
+            if (confirm(`Remover a montadora ${montadora} e todos seus modelos e anos?`)) {
+                delete database[montadora];
+                gerarListaMontadorasGerenciar();
+                gerarListaMontadoras();
+                salvarDatabase();
+                mostrarAlerta(`Montadora "${montadora}" removida com sucesso!`, 'success');
+            }
+        }
+
+        // Funções para modelos
+        function mostrarGerenciarModelos() {
+            document.getElementById("nome-montadora-gerenciar").textContent = montadoraSelecionada;
+            gerarListaModelosGerenciar();
+            trocarPagina("page-gerenciar-modelos");
+        }
+
+        function gerarListaModelos() {
+            const lista = document.getElementById("lista-modelos");
+            lista.innerHTML = "";
+            
+            if (!database[montadoraSelecionada]) return;
+            
+            Object.keys(database[montadoraSelecionada]).sort().forEach(modelo => {
+                const btn = document.createElement("button");
+                btn.className = "btn";
+                btn.textContent = modelo;
+                btn.onclick = () => mostrarAnos(modelo);
+                lista.appendChild(btn);
+            });
+        }
+
+        function gerarListaModelosGerenciar() {
+            const lista = document.getElementById("lista-modelos-gerenciar");
+            lista.innerHTML = "";
+            
+            Object.keys(database[montadoraSelecionada]).sort().forEach(modelo => {
+                const container = document.createElement("div");
+                container.className = "item-container";
+                container.innerHTML = `
+                    <span>${modelo}</span>
+                    <button class="btn-remover" onclick="removerModelo('${modelo.replace(/'/g, "\\'")}')">Remover</button>
+                `;
+                lista.appendChild(container);
+            });
+        }
+
+        function adicionarModelo() {
+            const input = document.getElementById("novo-modelo");
+            const nome = input.value.trim();
+            
+            if (!nome) {
+                mostrarAlerta("Por favor, insira um nome para o modelo", 'danger');
+                return;
+            }
+            
+            if (database[montadoraSelecionada][nome]) {
+                mostrarAlerta("Este modelo já existe", 'danger');
+                return;
+            }
+            
+            database[montadoraSelecionada][nome] = {
+                "2023": { 
+                    observacao: "",
+                    configuracoes: {
+                        "Abertura": { visivel: true, preco: "R$ 150,00", obs: "" },
+                        "Chave sem modelo Yale": { visivel: true, preco: "R$ 80,00", obs: "" }
+                    }
+                }
+            };
+            
+            input.value = "";
+            gerarListaModelosGerenciar();
+            gerarListaModelos();
+            salvarDatabase();
+            mostrarAlerta(`Modelo "${nome}" adicionado com sucesso!`, 'success');
+        }
+
+        function removerModelo(modelo) {
+            if (confirm(`Remover o modelo ${modelo} e todos seus anos?`)) {
+                delete database[montadoraSelecionada][modelo];
+                gerarListaModelosGerenciar();
+                gerarListaModelos();
+                salvarDatabase();
+                mostrarAlerta(`Modelo "${modelo}" removido com sucesso!`, 'success');
+            }
+        }
+
+        // Funções para anos
+        function mostrarGerenciarAnos() {
+            document.getElementById("nome-modelo-gerenciar").textContent = modeloSelecionado;
+            gerarListaAnosGerenciar();
+            trocarPagina("page-gerenciar-anos");
+        }
+
+        function gerarListaAnos() {
+            const lista = document.getElementById("lista-anos");
+            lista.innerHTML = "";
+            
+            Object.keys(database[montadoraSelecionada][modeloSelecionado])
+                .sort((a, b) => b - a) // Ordena do mais novo para o mais antigo
+                .forEach(ano => {
+                    const btn = document.createElement("button");
+                    btn.className = "btn-ano";
+                    btn.textContent = ano;
+                    btn.onclick = () => mostrarPreco(ano);
+                    lista.appendChild(btn);
+                });
+        }
+
+        function gerarListaAnosGerenciar() {
+            const lista = document.getElementById("lista-anos-gerenciar");
+            lista.innerHTML = "";
+            
+            Object.keys(database[montadoraSelecionada][modeloSelecionado])
+                .sort((a, b) => b - a)
+                .forEach(ano => {
+                    const container = document.createElement("div");
+                    container.className = "item-container";
+                    container.innerHTML = `
+                        <span>${ano}</span>
+                        <button class="btn-remover" onclick="removerAno('${ano}')">Remover</button>
+                    `;
+                    lista.appendChild(container);
+                });
+        }
+
+        function adicionarAno() {
+            const input = document.getElementById("novo-ano");
+            const ano = input.value.trim();
+            
+            if (!ano || ano.length !== 4 || isNaN(ano)) {
+                mostrarAlerta("Ano inválido (deve ser um número de 4 dígitos)", 'danger');
+                return;
+            }
+            
+            if (database[montadoraSelecionada][modeloSelecionado][ano]) {
+                mostrarAlerta("Este ano já existe", 'danger');
+                return;
+            }
+            
+            database[montadoraSelecionada][modeloSelecionado][ano] = {
+                observacao: "",
+                configuracoes: {
+                    "Abertura": { visivel: true, preco: "R$ 150,00", obs: "" },
+                    "Chave sem modelo Yale": { visivel: true, preco: "R$ 80,00", obs: "" }
+                }
+            };
+            
+            input.value = "";
+            gerarListaAnosGerenciar();
+            gerarListaAnos();
+            salvarDatabase();
+            mostrarAlerta(`Ano ${ano} adicionado com sucesso!`, 'success');
+        }
+
+        function removerAno(ano) {
+            if (confirm(`Remover o ano ${ano}?`)) {
+                delete database[montadoraSelecionada][modeloSelecionado][ano];
+                gerarListaAnosGerenciar();
+                gerarListaAnos();
+                salvarDatabase();
+                mostrarAlerta(`Ano ${ano} removido com sucesso!`, 'success');
+            }
+        }
+
+        // Funções para preços
+        function mostrarPreco(ano) {
+            anoSelecionado = ano;
+            document.getElementById("nome-modelo-ano").textContent = `${montadoraSelecionada} ${modeloSelecionado} ${ano}`;
+            
+            document.getElementById("view-mode").classList.remove("hidden");
+            document.getElementById("edit-mode").classList.add("hidden");
+            
+            const table = document.getElementById("precos-table").querySelector('tbody');
+            table.innerHTML = "";
+            
+            const dados = database[montadoraSelecionada][modeloSelecionado][ano];
+            
+            Object.entries(dados.configuracoes).forEach(([descricao, config]) => {
+                if (config.visivel) {
+                    const row = table.insertRow();
+                    row.innerHTML = `
+                        <td>${descricao}${config.obs ? `<div style="font-size:12px;color:#ccc">${config.obs}</div>` : ''}</td>
+                        <td>${config.preco}</td>
+                    `;
+                }
+            });
+            
+            document.getElementById("observacao-view").textContent = dados.observacao || "Nenhuma observação";
+            trocarPagina("page-preco");
+        }
+
+        function entrarModoEdicao() {
+            document.getElementById("view-mode").classList.add("hidden");
+            document.getElementById("edit-mode").classList.remove("hidden");
+            
+            const table = document.getElementById("edit-table").querySelector('tbody');
+            table.innerHTML = "";
+            
+            const dados = database[montadoraSelecionada][modeloSelecionado][anoSelecionado];
+            
+            Object.entries(dados.configuracoes).forEach(([descricao, config]) => {
+                const safeId = criarSafeId(descricao);
+                const valorSemRS = config.preco.replace('R$', '').trim();
+                
+                const row = table.insertRow();
+                row.innerHTML = `
+                    <td>
+                        <input type="text" id="${safeId}-desc" class="form-input" 
+                               value="${descricao}" style="width: 100%;">
+                        <input type="text" id="${safeId}-obs" class="form-input" 
+                               placeholder="Observação" value="${config.obs || ''}" style="width: 100%; margin-top: 5px;">
+                    </td>
+                    <td>
+                        <input type="text" id="${safeId}-edit" value="${valorSemRS}" 
+                               class="form-input" style="width:80px;text-align:right">
+                    </td>
+                    <td>
+                        <button class="btn-remover" onclick="removerItem('${descricao.replace(/'/g, "\\'")}')">Remover</button>
+                    </td>
+                `;
+            });
+            
+            document.getElementById("observacao-edit").value = dados.observacao || "";
+            
+            // Focar no primeiro campo de edição
+            setTimeout(() => {
+                const firstInput = document.querySelector('#edit-table input');
+                if (firstInput) firstInput.focus();
+            }, 100);
+        }
+
+        function sairModoEdicao() {
+            document.getElementById("view-mode").classList.remove("hidden");
+            document.getElementById("edit-mode").classList.add("hidden");
+        }
+
+        function salvarPrecos() {
+            const dados = database[montadoraSelecionada][modeloSelecionado][anoSelecionado];
+            const novasConfiguracoes = {};
+            
+            // Primeiro, coletamos todos os dados editados
+            const configuracoesEditadas = {};
+            Object.entries(dados.configuracoes).forEach(([descricaoOriginal, config]) => {
+                const safeId = criarSafeId(descricaoOriginal);
+                const novaDescricao = document.getElementById(`${safeId}-desc`).value.trim();
+                const novoPreco = document.getElementById(`${safeId}-edit`).value.trim();
+                const novaObs = document.getElementById(`${safeId}-obs`).value.trim();
+                
+                // Formata o preço corretamente
+                let precoFormatado = "R$ 0,00";
+                if (novoPreco) {
+                    if (!isNaN(novoPreco.replace(',', '.'))) {
+                        const valorNumerico = parseFloat(novoPreco.replace(',', '.'));
+                        precoFormatado = "R$ " + valorNumerico.toFixed(2).replace('.', ',');
+                    } else {
+                        precoFormatado = "R$ " + novoPreco;
+                    }
+                }
+                
+                configuracoesEditadas[novaDescricao] = {
+                    visivel: true,
+                    preco: precoFormatado,
+                    obs: novaObs
+                };
+            });
+            
+            // Atualizamos as configurações com os dados editados
+            dados.configuracoes = configuracoesEditadas;
+            dados.observacao = document.getElementById("observacao-edit").value;
+            
+            mostrarPreco(anoSelecionado);
+            salvarDatabase();
+        }
+
+        function adicionarNovoItem() {
+            const descInput = document.getElementById("novo-item-descricao");
+            const precoInput = document.getElementById("novo-item-preco");
+            const descricao = descInput.value.trim();
+            let preco = precoInput.value.trim();
+            
+            if (!descricao) {
+                mostrarAlerta("Descrição é obrigatória", 'danger');
+                return;
+            }
+            
+            const dados = database[montadoraSelecionada][modeloSelecionado][anoSelecionado];
+            if (dados.configuracoes[descricao]) {
+                mostrarAlerta("Item já existe", 'danger');
+                return;
+            }
+            
+            // Formata o preço corretamente
+            if (preco && !isNaN(preco.replace(',', '.'))) {
+                preco = parseFloat(preco.replace(',', '.')).toFixed(2);
+                preco = preco.replace('.', ',');
+            } else {
+                preco = "0,00";
+            }
+            
+            dados.configuracoes[descricao] = {
+                visivel: true,
+                preco: "R$ " + preco,
+                obs: ""
+            };
+            
+            descInput.value = "";
+            precoInput.value = "";
+            entrarModoEdicao();
+            salvarDatabase();
+            mostrarAlerta(`Item "${descricao}" adicionado com sucesso!`, 'success');
+        }
+
+        function removerItem(descricao) {
+            if (confirm(`Remover o item "${descricao}"?`)) {
+                delete database[montadoraSelecionada][modeloSelecionado][anoSelecionado].configuracoes[descricao];
+                entrarModoEdicao();
+                salvarDatabase();
+                mostrarAlerta(`Item "${descricao}" removido com sucesso!`, 'success');
+            }
+        }
+
+        // Funções de navegação
+        function trocarPagina(idPagina) {
+            document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+            document.getElementById(idPagina).classList.add("active");
+            window.scrollTo(0, 0);
+        }
+
+        function mostrarModelos(montadora) {
+            montadoraSelecionada = montadora;
+            document.getElementById("nome-montadora").textContent = montadora;
+            gerarListaModelos();
+            trocarPagina("page-modelos");
+        }
+
+        function mostrarAnos(modelo) {
+            modeloSelecionado = modelo;
+            document.getElementById("nome-modelo").textContent = modelo;
+            gerarListaAnos();
+            trocarPagina("page-anos");
+        }
+
+        function voltarParaMontadoras() { 
+            gerarListaMontadoras();
+            trocarPagina("page-montadoras"); 
+        }
+        
+        function voltarParaModelos() { 
+            gerarListaModelos();
+            trocarPagina("page-modelos"); 
+        }
+        
+        function voltarParaAnos() { 
+            gerarListaAnos();
+            trocarPagina("page-anos"); 
+        }
+
+        // Manipulador de eventos de teclado
+        document.addEventListener('keydown', function(event) {
+            // Enter para salvar quando estiver editando
+            if (event.key === 'Enter' && !document.getElementById('edit-mode').classList.contains('hidden')) {
+                salvarPrecos();
+                event.preventDefault();
+            }
+            
+            // Esc para voltar
+            if (event.key === 'Escape') {
+                if (document.getElementById('page-preco').classList.contains('active')) {
+                    if (document.getElementById('edit-mode').classList.contains('hidden')) {
+                        voltarParaAnos();
+                    } else {
+                        sairModoEdicao();
+                    }
+                } else if (document.getElementById('page-anos').classList.contains('active')) {
+                    voltarParaModelos();
+                } else if (document.getElementById('page-modelos').classList.contains('active')) {
+                    voltarParaMontadoras();
+                } else if (document.getElementById('page-gerenciar-montadoras').classList.contains('active') || 
+                           document.getElementById('page-gerenciar-modelos').classList.contains('active') || 
+                           document.getElementById('page-gerenciar-anos').classList.contains('active') ||
+                           document.getElementById('page-backup').classList.contains('active')) {
+                    history.back();
+                }
+                event.preventDefault();
+            }
+        });
+
+        // Inicialização
+        gerarListaMontadoras();
+    </script>
+</body>
+</html>
